@@ -1,0 +1,12 @@
+January 6 0 4 1 31
+February 6 3 4 1 28
+March 6 3 1 1 31
+April 7 6 6 1 30
+May 6 1 3 1 31
+June 6 4 1 1 30
+July 7 6 5 1 31
+August 6 2 2 1 31
+September 6 5 0 1 30
+October 6 0 4 1 31
+November 6 3 2 1 30
+December 7 5 6 1 31

@@ -1,0 +1,22 @@
+<component name="libraryTable">
+  <library name="jasypt">
+    <CLASSES />
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-acegisecurity" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-hibernate3" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-hibernate4" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-hibernate5" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-spring2" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-spring3" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-spring31" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-spring4" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-springsecurity2" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-springsecurity3" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-springsecurity4" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-wicket13" />
+      <root url="jar://$PROJECT_DIR$/lib/jasypt-1.9.3-dist.zip!/jasypt-1.9.3/apidocs/jasypt-wicket15" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
