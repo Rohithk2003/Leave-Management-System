@@ -17,7 +17,7 @@ public class passwordResetRequestFrame implements ActionListener {
 
     passwordResetRequestFrame() {
         FlatMacDarkLaf.setup();
-        frame = new JFrame();
+        frame = new JFrame("Resent");
         frame.setVisible(true);
         frame.setSize(400, 400);
         frame.setLayout(null);
@@ -66,7 +66,7 @@ public class passwordResetRequestFrame implements ActionListener {
     private boolean checkIdExists() {
         try {
             Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
-            PreparedStatement st = driver.prepareStatement("select password from users where username = ?");
+            PreparedStatement st = driver.prepareStatement("select * from users where username = ?");
             st.setString(1, idTextField.getText());
             ResultSet rs = st.executeQuery();
             if (!rs.isBeforeFirst()) {
@@ -75,7 +75,7 @@ public class passwordResetRequestFrame implements ActionListener {
             } else {
                 return true;
             }
-        } catch (SQLException ex) {
+        } catch (SQLException ignored) {
         }
         return false;
     }

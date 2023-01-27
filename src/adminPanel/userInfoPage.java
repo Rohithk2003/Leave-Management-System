@@ -27,13 +27,11 @@ public class userInfoPage implements ActionListener {
     private JPanel buttonLayout;
     private FlatTextField searchField;
     private JPanel userDisplay;
-    private FlatScrollPane scrollablePane;
     private int studentsNo;
     private int facultiesNo;
     private int advisorsNo;
     private int hodNo;
     private FlatButton searchBtn;
-    private FlatButton passwordResetRequest;
 
     public userInfoPage(JPanel parentComponent) {
 
@@ -208,7 +206,7 @@ public class userInfoPage implements ActionListener {
                             user.setDeptName(r1.getString("department_name"));
                         }
                     }
-                    if (Objects.equals(currentUserType, "faculty") || currentUserType == "hod") {
+                    if (currentUserType.equals("faculty") || currentUserType.equals("hod")) {
                         int depId = rs.getInt("department_id");
                         st1 = driver.prepareStatement("select department_name from department where department_id = ?");
                         st1.setInt(1, depId);
@@ -218,11 +216,12 @@ public class userInfoPage implements ActionListener {
                         }
                     }
                     if (Objects.equals(currentUserType, "advisor")) {
-                        int id = rs.getInt("section_id");
+                        int id = rs.getInt("sec_id");
                         st1 = driver.prepareStatement("select secname from section where secid = ?");
                         st1.setInt(1, id);
                         r1 = st1.executeQuery();
-                        user.setSection(r1.getString("secname"));
+                        while (r1.next())
+                            user.setSection(r1.getString("secname"));
                     }
                     user.setCurrentUser(currentUserType);
                     userDisplay.removeAll();
@@ -292,11 +291,9 @@ public class userInfoPage implements ActionListener {
         addUser.setBounds(1200, 17, 120, 30);
         addUser.setFocusable(false);
 
-        passwordResetRequest = new FlatButton();
+        FlatButton passwordResetRequest = new FlatButton();
         passwordResetRequest.setText("Reset Password Requests");
-        passwordResetRequest.addActionListener(e -> {
-            new resetPasswordRequestWindow();
-        });
+        passwordResetRequest.addActionListener(e -> new resetPasswordRequestWindow());
         passwordResetRequest.setFont(UIManager.getFont("h3.regular.font"));
         passwordResetRequest.setBounds(980, 17, 200, 30);
         passwordResetRequest.setFocusable(false);
@@ -314,7 +311,7 @@ public class userInfoPage implements ActionListener {
         userDisplay.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 2));
         userDisplay.setPreferredSize(new Dimension(1340, 2000));
 
-        scrollablePane = new FlatScrollPane();
+        FlatScrollPane scrollablePane = new FlatScrollPane();
         scrollablePane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollablePane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollablePane.setSmoothScrolling(true);

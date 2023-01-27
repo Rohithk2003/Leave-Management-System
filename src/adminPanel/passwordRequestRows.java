@@ -40,7 +40,7 @@ class passwordRequestRows extends JPanel implements ActionListener {
         this.add(toLabel);
         this.add(passwordResetButton);
         if (dob.equals("Date of birth")) {
-            this.remove(passwordResetButton);
+            passwordResetButton.setVisible(false);
         }
     }
 

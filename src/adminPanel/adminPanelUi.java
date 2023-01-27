@@ -13,6 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class adminPanelUi implements MouseListener, ActionListener {
     private final String usernameUser;
@@ -22,6 +25,7 @@ public class adminPanelUi implements MouseListener, ActionListener {
     private JFrame frame;
     private Popup popup;
     private PopupFactory pf;
+    private FlatButton deleteAccount;
 
     public adminPanelUi(String username) {
         System.setProperty("sun.java2d.uiScale", "1.01");
@@ -111,12 +115,12 @@ public class adminPanelUi implements MouseListener, ActionListener {
         hoverPanel.setPreferredSize(new Dimension(160, 95));
         hoverPanel.setOpaque(false);
 
-        FlatButton aboutUs = new FlatButton();
-        aboutUs.setText("About us");
-        aboutUs.setFont(UIManager.getFont("h2.regular.font"));
-        aboutUs.setBorderPainted(true);
-        aboutUs.setPreferredSize(new Dimension(160, 40));
-        aboutUs.addActionListener(this);
+        deleteAccount = new FlatButton();
+        deleteAccount.setText("Delete Account");
+        deleteAccount.setFont(UIManager.getFont("h2.regular.font"));
+        deleteAccount.setBorderPainted(true);
+        deleteAccount.setPreferredSize(new Dimension(160, 40));
+        deleteAccount.addActionListener(this);
 
         FlatButton logOut = new FlatButton();
         logOut.setText("Log out");
@@ -129,7 +133,7 @@ public class adminPanelUi implements MouseListener, ActionListener {
         logOut.setBorderPainted(true);
 
         // adding all buttons
-        hoverPanel.add(aboutUs);
+        hoverPanel.add(deleteAccount);
         hoverPanel.add(logOut);
 
         pf = PopupFactory.getSharedInstance();
@@ -180,5 +184,18 @@ public class adminPanelUi implements MouseListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == deleteAccount) {
+            try {
+                Connection c = new JDBCDriver.driverJDBC().getJDBCDriver();
+                PreparedStatement st = c.prepareStatement("delete from users where username = ?");
+                st.setString(1, usernameUser.strip());
+                st.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Your account has been deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+                frame.dispose();
+                new loginUi();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class resetPasswordRequestWindow implements ActionListener {
-//    private passwordRequestPanel[] panels;
 
     private final JPanel requestPanel;
 

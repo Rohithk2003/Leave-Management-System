@@ -107,6 +107,8 @@ public class signUP implements ActionListener, MouseListener {
 
             } else if (currentUser.getPassword().equals(currentUser.getUsername())) {
                 JOptionPane.showMessageDialog(null, "Password must not be equal to username", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (currentUser.getUsername().startsWith("HO") || currentUser.getUsername().startsWith("FA") || currentUser.getUsername().startsWith("ST") || currentUser.getUsername().startsWith("AD")) {
+                JOptionPane.showMessageDialog(null, "Only admins can sign up", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 try {
                     Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();

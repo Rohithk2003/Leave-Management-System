@@ -105,9 +105,27 @@ public class loginUi implements ActionListener, MouseListener {
         frame.add(passInput);
         frame.add(forgotPassBtn);
         frame.add(adminPanelButton);
+        checkAdminExists();
         frame.setVisible(true);
         frame.revalidate();
         frame.repaint();
+    }
+
+    private void checkAdminExists() {
+        try {
+            Connection c = new JDBCDriver.driverJDBC().getJDBCDriver();
+            PreparedStatement st = c.prepareStatement("select * from users where username " +
+                    "not like 'ST%' and username not  like 'AD%' and username not like 'FA%' and username not like 'HO%'");
+            ResultSet rs = st.executeQuery();
+            if (rs.isBeforeFirst()) {
+                adminPanelButton.setEnabled(false);
+                adminPanelButton.setToolTipText("Admin Already Exists");
+            } else {
+                adminPanelButton.setEnabled(true);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String getName(String id, String userType) {
@@ -118,7 +136,7 @@ public class loginUi implements ActionListener, MouseListener {
             PreparedStatement st = driver.prepareStatement("select " + column + " from " + userType + " where " + column1 + " = ?");
             st.setString(1, id);
             ResultSet rs = st.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 return rs.getString(userType + "_name");
             }
         } catch (SQLException e) {
@@ -136,16 +154,12 @@ public class loginUi implements ActionListener, MouseListener {
             if (result) {
                 frame.dispose();
                 String userType = userInput.getText().substring(0, 2);
-                if (userType.equals("ST")) {
-                    new mainUi(userInput.getText(), "student");
-                } else if (userType.equals("FA")) {
-                    new mainUi(userInput.getText(), "faculty");
-                } else if (userType.equals("AD")) {
-                    new approvalUser(userInput.getText(), "advisor");
-                } else if (userType.equals("HO")) {
-                    new approvalUser(userInput.getText(), "hod");
-                } else {
-                    new adminPanelUi(userInput.getText());
+                switch (userType) {
+                    case "ST" -> new mainUi(userInput.getText(), "student");
+                    case "FA" -> new mainUi(userInput.getText(), "faculty");
+                    case "AD" -> new approvalUser(userInput.getText(), "advisor");
+                    case "HO" -> new approvalUser(userInput.getText(), "hod");
+                    default -> new adminPanelUi(userInput.getText());
                 }
             } else {
                 JOptionPane.showMessageDialog(frame, "Invalid Username/Password", "Login Invalid", JOptionPane.PLAIN_MESSAGE);
