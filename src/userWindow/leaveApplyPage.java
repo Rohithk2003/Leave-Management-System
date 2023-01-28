@@ -51,7 +51,6 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
         formLayout.setBounds(0, 0, 700, 100);
         formLayout.setHorizontalAlignment(JLabel.CENTER);
 
-
         JLabel leaveText = new JLabel("Type of leave :");
         leaveText.setBounds(60, 98, 140, 40);
         leaveText.setFont(UIManager.getFont("h2.regular.font"));
@@ -102,7 +101,6 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
         documentFilePicker.setBounds(60, 340, 300, 40);
         documentFilePicker.addMouseListener(this);
 
-
         saveBtn = new JButton("Apply for leave");
         saveBtn.setFont(UIManager.getFont("h2.regular.font"));
         saveBtn.addActionListener(this);
@@ -126,26 +124,53 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
     protected void loadData() {
         try {
             this.driver = new JDBCDriver.driverJDBC().getJDBCDriver();
-            PreparedStatement st = driver.prepareStatement("select count(*) from typeofleave");
+            PreparedStatement st;
+            if (userId.substring(0, 2).equals("ST")) {
+                st = driver
+                        .prepareStatement("select count(*) from typeofleave where availability = ?");
+                st.setString(1, "SF");
+            } else {
+                st = driver.prepareStatement(
+                        "select count(*) from typeofleave where availability = ? or availability = ?");
+                st.setString(1, "F");
+                st.setString(2, "SF");
+            }
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 typeOfLeaveData = new String[rs.getInt(1)];
             }
-            st = driver.prepareStatement("select leave_type from typeofleave order by leave_type ");
+
+            if (userId.substring(0, 2).equals("ST")) {
+                st = driver
+                        .prepareStatement(
+                                "select leave_type from typeofleave where availability = ? order by leave_type ");
+                st.setString(1, "SF");
+            } else {
+                st = driver.prepareStatement(
+                        "select leave_type from typeofleave where availability = ? or availability = ? order by leave_type ");
+                st.setString(1, "F");
+                st.setString(2, "SF");
+            }
+
             rs = st.executeQuery();
             int i = 0;
             while (rs.next()) {
                 typeOfLeaveData[i] = rs.getString("leave_type");
                 i++;
             }
-        } catch (Exception e) {
+            st.close();
+            rs.close();
+        } catch (
+
+        Exception e) {
             e.printStackTrace();
         }
     }
 
     protected String checkLeaveExists(java.sql.Date d1, java.sql.Date d2) {
         try {
-            PreparedStatement st = driver.prepareStatement("select start_date,end_date,status from leave_records where id = ?");
+            PreparedStatement st = driver
+                    .prepareStatement("select start_date,end_date,status from leave_records where id = ?");
             st.setString(1, userId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
@@ -221,24 +246,28 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
                 System.out.println(leaveExists);
                 if (!leaveExists.equals("")) {
                     if (leaveExists.equals("Under Review")) {
-                        JOptionPane.showMessageDialog(null, "A leave request already exists under the given dates", "Leave request exists", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "A leave request already exists under the given dates",
+                                "Leave request exists", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        JOptionPane.showMessageDialog(null, "A leave was already approved  under the given dates", " Duplicate requests", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "A leave was already approved  under the given dates",
+                                " Duplicate requests", JOptionPane.ERROR_MESSAGE);
                     }
                 } else if (startDate.compareTo(toDate) < 0) {
-                    PreparedStatement st = driver.prepareStatement("select proof_required from typeofleave where leave_type = ?");
+                    PreparedStatement st = driver
+                            .prepareStatement("select proof_required from typeofleave where leave_type = ?");
                     boolean fileUploaded = documentProofFileLocation.equals("");
                     st.setString(1, (String) typeOfLeave.getSelectedItem());
                     ResultSet rs = st.executeQuery();
                     while (rs.next()) {
                         if (fileUploaded) {
                             if (fileUploaded != rs.getBoolean("proof_required")) {
-                                st = driver.prepareStatement("select count(*) from leave_records");
+                                st = driver.prepareStatement("select max(leave_id) from leave_records");
                                 rs = st.executeQuery();
                                 int leaveId = 0;
                                 while (rs.next()) {
-                                    leaveId = rs.getInt("count");
+                                    leaveId = rs.getInt(1);
                                 }
+
                                 st = driver.prepareStatement("insert into leave_records values (?,?,?,?,?,?,?)");
                                 st.setInt(1, leaveId + 1);
                                 st.setString(2, userId);
@@ -248,16 +277,18 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
                                 st.setString(6, documentProofFileLocation);
                                 st.setString(7, "Under Review");
                                 st.executeUpdate();
-                                JOptionPane.showMessageDialog(null, "Leave has been requested", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Leave has been requested", "Success",
+                                        JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(null, "Proof is required", "Upload Proof", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Proof is required", "Upload Proof",
+                                        JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            st = driver.prepareStatement("select count(*) from leave_records");
+                            st = driver.prepareStatement("select max(leave_id) from leave_records");
                             rs = st.executeQuery();
                             int leaveId = 0;
                             while (rs.next()) {
-                                leaveId = rs.getInt("count");
+                                leaveId = rs.getInt(1);
                             }
                             st = driver.prepareStatement("insert into leave_records values (?,?,?,?,?,?,?)");
                             st.setInt(1, leaveId + 1);
@@ -268,7 +299,8 @@ public class leaveApplyPage extends JPanel implements ActionListener, MouseListe
                             st.setString(6, documentProofFileLocation);
                             st.setString(7, "Under Review");
                             st.executeUpdate();
-                            JOptionPane.showMessageDialog(null, "Leave has been requested", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Leave has been requested", "Success",
+                                    JOptionPane.INFORMATION_MESSAGE);
 
                         }
 

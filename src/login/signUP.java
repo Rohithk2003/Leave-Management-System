@@ -6,6 +6,7 @@ import com.formdev.flatlaf.extras.components.FlatPasswordField;
 import com.formdev.flatlaf.extras.components.FlatTextField;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import imageData.imageData;
+import passwordEncryption.Solution;
 import users.login_user;
 
 import javax.swing.*;
@@ -114,7 +115,7 @@ public class signUP implements ActionListener, MouseListener {
                     Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                     PreparedStatement st = driver.prepareStatement("insert into users values(?,?)");
                     st.setString(1, currentUser.getUsername());
-                    st.setString(2, currentUser.getPassword());
+                    st.setString(2, Solution.encrypt(currentUser.getPassword(), 10));
                     st.execute();
                     JOptionPane.showMessageDialog(null, "Account has been created ", "Success", JOptionPane.INFORMATION_MESSAGE);
                     frame.dispose();

@@ -127,6 +127,7 @@ public class leaveRecordsPage extends DefaultTableModel implements ActionListene
                 st.setInt(1, leaveModels[selectedRowIndex].getLeaveId());
                 st.executeUpdate();
                 parentComponent.revalidate();
+                JOptionPane.showMessageDialog(null, "Done");
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }

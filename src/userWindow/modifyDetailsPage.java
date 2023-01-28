@@ -3,6 +3,7 @@ package userWindow;
 import com.formdev.flatlaf.extras.components.FlatButton;
 import com.formdev.flatlaf.extras.components.FlatTextField;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import passwordEncryption.Solution;
 import users.*;
 
 import javax.swing.*;
@@ -20,12 +21,9 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
     private final String name;
     private final Connection driver;
     private final String currentUserType;
-    private JFrame userI;
     private FlatTextField nameTextField;
     private JPasswordField passwordTextField;
     private FlatButton saveBtn;
-    private FlatButton uploadPhoto;
-    private JLabel modifyUpdateDetails;
     private FlatTextField addressTextField;
 
     public modifyDetailsPage(student st, faculty f, advisor a, hod h, String currentUserType) {
@@ -48,14 +46,14 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
 
 
     private void setupUI() {
-        userI = new JFrame();
+        JFrame userI = new JFrame();
         FlatMacDarkLaf.setup();
 
         userI.setLayout(null);
         userI.setResizable(false);
         userI.setSize(500, 500);
 
-        modifyUpdateDetails = new JLabel("Modify Details");
+        JLabel modifyUpdateDetails = new JLabel("Modify Details");
         modifyUpdateDetails.setFont(UIManager.getFont("h0.font"));
         modifyUpdateDetails.setHorizontalAlignment(JLabel.CENTER);
         modifyUpdateDetails.setBounds(0, 0, userI.getWidth(), 50);
@@ -103,10 +101,6 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
         passwordTextField.setFont(UIManager.getFont("h2.regular.font"));
         passwordTextField.setBounds(300, 260, 150, 30);
 
-        uploadPhoto = new FlatButton();
-        uploadPhoto.setText("Re-Upload Photo");
-        uploadPhoto.setFont(UIManager.getFont("h2.regular.font"));
-        uploadPhoto.setBounds(47, 320, 220, 40);
 
         saveBtn = new FlatButton();
         saveBtn.setText("Save and Exit");
@@ -126,7 +120,6 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
         userI.add(passwordLabel);
         userI.add(passwordTextField);
         userI.add(saveBtn);
-        userI.add(uploadPhoto);
         userI.setVisible(true);
         userI.setLocationRelativeTo(null);
 
@@ -138,7 +131,7 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
             if (!(new String(passwordTextField.getPassword()).equals(""))) {
                 try {
                     PreparedStatement st = driver.prepareStatement("update users set password = ? where username = ?");
-                    st.setString(1, new String(passwordTextField.getPassword()));
+                    st.setString(1, Solution.encrypt(new String(passwordTextField.getPassword()), 10));
                     st.setString(2, this.id);
                     st.executeUpdate();
                     JOptionPane.showMessageDialog(
@@ -146,26 +139,23 @@ public class modifyDetailsPage extends JFrame implements KeyListener, ActionList
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
-            } else {
-                int result = JOptionPane.showConfirmDialog(null, "Are you sure you don't want to update password?", "Password not provided", JOptionPane.YES_NO_OPTION);
-                if (result == 0) {
-                    if (!addressTextField.getText().equals("") && !nameTextField.getText().equals("")) {
-                        try {
-                            PreparedStatement st = driver.prepareStatement("update " + currentUserType + " set address = ? , " + currentUserType + "_name = ? where " + currentUserType + "_id = ?");
-                            st.setString(1, addressTextField.getText());
-                            st.setString(2, nameTextField.getText());
-                            st.setString(3, this.id);
-                            st.executeUpdate();
-                            JOptionPane.showMessageDialog(null, "Details has been successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
-                        } catch (SQLException ignored) {
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Details cannot be empty", "Null details", JOptionPane.ERROR_MESSAGE);
-                    }
+            }
+            if (!addressTextField.getText().equals("") && !nameTextField.getText().equals("")) {
+                try {
+                    PreparedStatement st = driver.prepareStatement("update " + currentUserType + " set address = ? , " + currentUserType + "_name = ? where " + currentUserType + "_id = ?");
+                    st.setString(1, addressTextField.getText());
+                    st.setString(2, nameTextField.getText());
+                    st.setString(3, this.id);
+                    st.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Details has been successfully updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+                } catch (SQLException ignored) {
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Details cannot be empty", "Null details", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
+
 
     @Override
     public void keyTyped(KeyEvent e) {

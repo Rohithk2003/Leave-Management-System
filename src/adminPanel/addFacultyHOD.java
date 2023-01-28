@@ -1,5 +1,7 @@
 package adminPanel;
 
+import passwordEncryption.Solution;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,7 +68,7 @@ public class addFacultyHOD extends addUser implements ActionListener, KeyListene
                     st.executeUpdate();
                     st = driver.prepareStatement("insert into users values (?,?)");
                     st.setString(1, usernameTextField.getText());
-                    st.setString(2, passwordTextField.getText());
+                    st.setString(2, Solution.encrypt(passwordTextField.getText(), 10));
                     st.executeUpdate();
                     rs.next();
                     JOptionPane.showMessageDialog(null, "Details of the " + userType + " has been created", "Success", JOptionPane.INFORMATION_MESSAGE);

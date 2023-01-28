@@ -7,6 +7,7 @@ import com.formdev.flatlaf.extras.components.FlatPasswordField;
 import com.formdev.flatlaf.extras.components.FlatTextField;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import imageData.imageData;
+import passwordEncryption.Solution;
 import userWindow.approvalUser;
 import userWindow.mainUi;
 import users.login_user;
@@ -149,7 +150,7 @@ public class loginUi implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
             currentUser.setUsername(userInput.getText());
-            currentUser.setPassword(new String(passInput.getPassword()));
+            currentUser.setPassword(Solution.encrypt(new String(passInput.getPassword()), 10));
             boolean result = currentUser.verifyCredentials();
             if (result) {
                 frame.dispose();

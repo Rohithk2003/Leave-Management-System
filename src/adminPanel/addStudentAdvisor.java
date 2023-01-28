@@ -1,6 +1,7 @@
 package adminPanel;
 
 import com.formdev.flatlaf.extras.components.FlatTextField;
+import passwordEncryption.Solution;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -121,7 +122,7 @@ public class addStudentAdvisor extends addUser implements ActionListener, KeyLis
                         st.executeUpdate();
                         st = driver.prepareStatement("insert into users values (?,?)");
                         st.setString(1, usernameTextField.getText());
-                        st.setString(2, passwordTextField.getText());
+                        st.setString(2, Solution.encrypt(passwordTextField.getText(), 10));
                         st.executeUpdate();
 
                     }
@@ -147,7 +148,7 @@ public class addStudentAdvisor extends addUser implements ActionListener, KeyLis
                         ui.dispose();
                         st = driver.prepareStatement("insert into users values (?,?)");
                         st.setString(1, usernameTextField.getText());
-                        st.setString(2, passwordTextField.getText());
+                        st.setString(2, Solution.encrypt(passwordTextField.getText(), 10));
                         st.executeUpdate();
                     }
                 }

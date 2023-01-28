@@ -3,6 +3,7 @@ package adminPanel;
 import com.formdev.flatlaf.extras.components.FlatButton;
 import com.formdev.flatlaf.extras.components.FlatLabel;
 import imageData.imageData;
+import passwordEncryption.Solution;
 import userWindow.modifyDetailsPage;
 import users.user;
 
@@ -111,7 +112,8 @@ class userInfoPanel extends JPanel implements ActionListener {
             parent.repaint();
             try {
                 Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
-                PreparedStatement st = driver.prepareStatement("delete from " + currentUser + " where " + currentUser + "_id = ?");
+                PreparedStatement st = driver
+                        .prepareStatement("delete from " + currentUser + " where " + currentUser + "_id = ?");
                 st.setString(1, userId);
                 st.executeUpdate();
                 st = driver.prepareStatement("delete from leave_records where id = ?");
@@ -120,7 +122,9 @@ class userInfoPanel extends JPanel implements ActionListener {
                 st = driver.prepareStatement("delete from users where username = ?");
                 st.setString(1, userId);
                 st.executeUpdate();
-
+                st = driver.prepareStatement("delete from passwordresetrequest where id = ?");
+                st.setString(1, userId);
+                ;
                 JOptionPane.showMessageDialog(null, "User's details has been removed from the database");
                 parent.revalidate();
             } catch (SQLException ex) {
@@ -130,7 +134,7 @@ class userInfoPanel extends JPanel implements ActionListener {
             try {
                 Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                 PreparedStatement st = driver.prepareStatement("update users set password = ? where username = ?");
-                st.setString(1, userId);
+                st.setString(1, Solution.encrypt(userId, 10));
                 st.setString(2, userId);
                 st.executeUpdate();
                 System.out.println(uSER.getId());

@@ -1,5 +1,7 @@
 package adminPanel;
 
+import passwordEncryption.Solution;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -52,7 +54,7 @@ class passwordRequestRows extends JPanel implements ActionListener {
                 Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                 PreparedStatement st = driver.prepareStatement("update users set password = ? where username = ?");
                 st.setString(1, userID);
-                st.setString(2, userID);
+                st.setString(2, Solution.encrypt(userID, 10));
                 st.executeUpdate();
                 driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                 st = driver.prepareStatement("delete from passwordresetrequest where id = ?");
