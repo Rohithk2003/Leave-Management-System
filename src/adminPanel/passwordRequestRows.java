@@ -53,8 +53,8 @@ class passwordRequestRows extends JPanel implements ActionListener {
             try {
                 Connection driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                 PreparedStatement st = driver.prepareStatement("update users set password = ? where username = ?");
-                st.setString(1, userID);
-                st.setString(2, Solution.encrypt(userID, 10));
+                st.setString(2, userID);
+                st.setString(1, Solution.encrypt(userID, 10));
                 st.executeUpdate();
                 driver = new JDBCDriver.driverJDBC().getJDBCDriver();
                 st = driver.prepareStatement("delete from passwordresetrequest where id = ?");
